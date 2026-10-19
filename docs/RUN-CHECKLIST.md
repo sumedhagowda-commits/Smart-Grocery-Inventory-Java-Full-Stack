@@ -1,0 +1,1 @@
+1. Java 17+ installed\n2. Maven installed\n3. Run `mvn spring-boot:run` from project root\n4. Open http://localhost:8080/register\n5. Register, sign in, add an item, and verify inventory/dashboard\n

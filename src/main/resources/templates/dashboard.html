@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard | Smart Grocery</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"><link href="/styles.css" rel="stylesheet">
+</head>
+<body>
+<div th:replace="~{fragments :: nav}"></div>
+<main class="container py-4 py-lg-5">
+  <div th:replace="~{fragments :: messages}"></div>
+  <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div><p class="eyebrow mb-1">YOUR KITCHEN, ORGANIZED</p><h1 class="h2 fw-bold mb-1">Good day, <span th:text="${userName}">there</span>!</h1><p class="text-secondary mb-0">Here is your grocery inventory overview.</p></div>
+    <a class="btn btn-primary" href="/items/new">＋ Add grocery item</a>
+  </div>
+  <div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3"><div class="stat-card"><div class="stat-label">Unique items</div><div class="stat-value" th:text="${totalItems}">0</div><div class="stat-note">Tracked groceries</div></div></div>
+    <div class="col-6 col-lg-3"><div class="stat-card"><div class="stat-label">Total quantity</div><div class="stat-value" th:text="${#numbers.formatDecimal(totalQuantity,1,2)}">0</div><div class="stat-note">Across all units</div></div></div>
+    <div class="col-6 col-lg-3"><div class="stat-card"><div class="stat-label">Low stock</div><div class="stat-value text-warning" th:text="${#lists.size(lowStock)}">0</div><div class="stat-note">Consider replenishing</div></div></div>
+    <div class="col-6 col-lg-3"><div class="stat-card"><div class="stat-label">Expiring in 7 days</div><div class="stat-value text-danger" th:text="${#lists.size(expiring)}">0</div><div class="stat-note">Check expiry dates</div></div></div>
+  </div>
+  <div class="row g-4">
+    <div class="col-lg-6"><section class="panel h-100"><div class="d-flex justify-content-between align-items-center mb-3"><h2 class="h5 fw-bold mb-0">⚠️ Low-stock alerts</h2><a href="/inventory" class="small">View inventory</a></div>
+      <div th:if="${#lists.isEmpty(lowStock)}" class="empty-state">Everything is stocked above its minimum level.</div>
+      <div th:each="item : ${lowStock}" class="alert-row"><div><strong th:text="${item.itemName}">Rice</strong><div class="small text-secondary" th:text="${item.category}">Grains</div></div><span class="badge text-bg-warning" th:text="${item.quantity + ' ' + item.unit + ' left'}">1 kg left</span></div>
+    </section></div>
+    <div class="col-lg-6"><section class="panel h-100"><div class="d-flex justify-content-between align-items-center mb-3"><h2 class="h5 fw-bold mb-0">📅 Expiry reminders</h2><a href="/inventory" class="small">View inventory</a></div>
+      <div th:if="${#lists.isEmpty(expiring) and #lists.isEmpty(expired)}" class="empty-state">No items are expired or due to expire within 7 days.</div>
+      <div th:each="item : ${expired}" class="alert-row"><div><strong th:text="${item.itemName}">Milk</strong><div class="small text-secondary">Expired</div></div><span class="badge text-bg-danger" th:text="${item.expiryDate}">Date</span></div>
+      <div th:each="item : ${expiring}" class="alert-row"><div><strong th:text="${item.itemName}">Milk</strong><div class="small text-secondary">Expiring soon</div></div><span class="badge text-bg-info" th:text="${item.expiryDate}">Date</span></div>
+    </section></div>
+    <div class="col-12"><section class="panel"><div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3"><h2 class="h5 fw-bold mb-0">📝 Shopping list</h2><a class="btn btn-sm btn-outline-primary" href="/shopping-list.csv">Export inventory CSV</a></div>
+      <div th:if="${#lists.isEmpty(shoppingList)}" class="empty-state">No shopping needed right now. Great work!</div>
+      <div class="shopping-chips"><span class="shopping-chip" th:each="item : ${shoppingList}" th:text="${item.itemName + ' · refill below ' + item.minStock + ' ' + item.unit}">Rice</span></div>
+    </section></div>
+  </div>
+</main>
+<footer class="container py-4 text-center small text-secondary">Smart Grocery List & Inventory Manager · Java Full Stack</footer>
+</body></html>

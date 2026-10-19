@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+<nav th:fragment="nav" class="navbar navbar-expand-lg navbar-dark app-nav">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="/dashboard">🛒 Smart Grocery</a>
+    <div class="d-flex align-items-center gap-2">
+      <a class="nav-link text-white" href="/dashboard">Dashboard</a>
+      <a class="nav-link text-white" href="/inventory">Inventory</a>
+      <form method="post" action="/logout" class="m-0">
+        <button class="btn btn-sm btn-outline-light" type="submit">Logout</button>
+      </form>
+    </div>
+  </div>
+</nav>
+<div th:fragment="messages">
+  <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+  <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+</div>
+</body>
+</html>
